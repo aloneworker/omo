@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center" @click.self="closeOpenCards">
     <!-- 標籤：包含標籤和標籤背景顏色 -->
     <span :class="badgeClass" style="user-select: none; cursor: pointer;" @dblclick="handleDoubleClick" @mousedown="startPress" @mouseup="endPress" @touchstart="startPress" @touchend="endPress">{{ badgeText }}</span>
     <!-- 標籤內容：表示我們想要紀錄的內容 -->
@@ -7,7 +7,7 @@
   </div>
 
   <!-- note-card：長按後彈出的對話方塊 -->
-  <div v-if="showCard" class="card mt-3" style="max-width: 90%; margin: 0 auto;">
+  <div v-if="showCard" class="card mt-3" style="max-width: 90%; margin: 0 auto;" @click.self="closeOpenCards">
     <div class="card-body">
       <h5 class="card-title fs-5">記事</h5>
       <input type="text" v-model="cardTitle" class="form-control form-control-md mb-2" placeholder="標籤">
@@ -17,7 +17,7 @@
   </div>
 
   <!-- 展示保存的 note-card 資訊 -->
-  <div v-if="showNote" class="card mt-3" style="max-width: 90%; margin: 0 auto;">
+  <div v-if="showNote" class="card mt-3" style="max-width: 90%; margin: 0 auto;" @click.self="closeOpenCards">
     <div class="card-body">
       <p class="card-text fs-5" style="white-space: pre-wrap;">{{ savedContent }}</p>
       <button class="btn btn-secondary btn-md" @click="closeNote">關閉</button>
@@ -25,7 +25,7 @@
   </div>
 
   <!-- 刪除確認窗口 -->
-  <div v-if="showDeleteConfirm" class="modal fade show" tabindex="-1" role="dialog" style="display: block; background: rgba(0, 0, 0, 0.5);">
+  <div v-if="showDeleteConfirm" class="modal fade show" tabindex="-1" role="dialog" style="display: block; background: rgba(0, 0, 0, 0.5);" @click.self="showDeleteConfirm = false">
     <div class="modal-dialog modal-dialog-centered shadow-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeUnmount, defineProps, computed, defineEmits } from 'vue';
+import { ref, onBeforeUnmount, defineProps, computed, defineEmits, watch } from 'vue';
 
 // 從父組件接收標籤、標題和內容
 const props = defineProps({
@@ -55,7 +55,7 @@ const props = defineProps({
 });
 
 // 發出事件到父組件
-const emit = defineEmits(['delete-item']);
+const emit = defineEmits(['delete-item', 'update-item']);
 
 // 標籤的文字
 const badgeText = ref(props.initialBadgeText || '@');
@@ -117,10 +117,17 @@ const confirmCard = () => {
   savedContent.value = cardContent.value;
   showCard.value = false; // Hide note-card after confirming
   badgeText.value = '書'; // Update the badge to "書" after confirming
+  emit('update-item', { badgeText: badgeText.value, cardTitle: cardTitle.value, cardContent: cardContent.value }); // Emit updated data to the parent component
 };
 
 const closeNote = () => {
   console.log('closeNote called, hiding note');
+  showNote.value = false;
+};
+
+const closeOpenCards = () => {
+  console.log('closeOpenCards called, hiding open cards if any');
+  showCard.value = false;
   showNote.value = false;
 };
 
@@ -146,6 +153,10 @@ const deleteBadge = () => {
   showDeleteConfirm.value = false;
   emit('delete-item'); // 向父組件發送刪除請求
 };
+
+watch([badgeText, cardTitle, cardContent], () => {
+  emit('update-item', { badgeText: badgeText.value, cardTitle: cardTitle.value, cardContent: cardContent.value });
+});
 
 onBeforeUnmount(() => {
   console.log('Component is unmounting, clearing pressTimer if active');

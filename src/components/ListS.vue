@@ -15,7 +15,8 @@
             :initial-badge-text="item.label" 
             :initial-title="item.title" 
             :initial-content="item.content" 
-            @delete-item="deleteItem(index)" 
+            @delete-item="deleteItem(index)"
+						@update-item="updateItem(index, $event)"
           />
         </li>
       </ul>
@@ -43,14 +44,36 @@ const items = ref([]);
 
 const fetchData = async () => {
   try {
-    const response = await axios.get('http://192.168.68.53:6996/api/items/');
+    const response = await axios.get('http://122.254.17.181:6996/api/items/');
     items.value = response.data;
   } catch (error) {
     console.error('Error fetching data from the server:', error);
   }
 };
 
+const updateItem = (index, updatedItem) => {
+  items.value[index].label = updatedItem.badgeText;
+  items.value[index].title = updatedItem.cardTitle;
+  items.value[index].content = updatedItem.cardContent;
+  syncData();
+};
 
+
+const syncData = async () => {
+  try {
+		console.log('put 了');
+    await axios.put('http://192.168.68.53:6996/api/items/', items.value);
+  } catch (error) {
+    console.error('Error syncing data with the server:', error);
+  }
+};
+
+
+
+watch(items, (newdata) => {
+	console.log(newdata)
+  syncData();
+}, { deep: true });
 // Fetch data from the Django server on component mount
 onMounted(fetchData);
 watch(() => props.fetch, () => {
