@@ -1,24 +1,22 @@
 <template>
-  <!-- 卡片容器，使用 Bootstrap 設置位置為橫向居中 -->
   <div class="card-container position-absolute top-0 start-50 translate-middle-x">
-    <!-- 卡片元素，包含卡片標題與列表項目 -->
+    <!-- Card element that contains the card header and list items -->
     <div class="card shadow p-2 mb-4 bg-body rounded" style="width: 16rem; margin-top: 15px;">
-
-      <!-- 卡片標題區域 -->
+      <!-- Card header section -->
       <div class="card-header" style="font-size: 0.9rem;" @dblclick="emitSignalToParent">
-        Featured
+        誌
       </div>
-      <!-- 卡片內的列表組，用來顯示各個項目 -->
+      <!-- List group inside the card for displaying list items -->
       <ul class="list-group list-group-flush">
-        <!-- 走過 items 數組，以渲染每個 ListItem 組件 -->
+        <!-- Loop through items array to render each ListItem component -->
         <li v-for="(item, index) in items" :key="item.title" class="list-group-item" style="font-size: 0.85rem;">
-          <!-- ListItem 組件用來加載標籤、標題和內容，並處理刪除事件 -->
+          <!-- ListItem component to display label, title, and content dynamically, and handle delete event -->
           <ListItem 
             :initial-badge-text="item.label" 
             :initial-title="item.title" 
             :initial-content="item.content" 
             @delete-item="deleteItem(index)"
-            @update-item="updateItem(index, $event)"
+						@update-item="updateItem(index, $event)"
           />
         </li>
       </ul>
@@ -27,73 +25,67 @@
 </template>
 
 <script setup>
-// 引入 ListItem 組件使用於渲染每個列表項目
+// Importing the ListItem component to be used inside the list item element
 import ListItem from "./ListItem.vue";
 import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
 import axios from 'axios';
 
-// 定義 props，取得引數 fetch
+
+
+// 定義 emits，向父組件傳遞事件
+const emit = defineEmits(['headerClicked']);
 const props = defineProps({
   fetch: {
     type: String,
     required: true
   }
 });
-
-// 定義 emits，向父組件傳遞事件
-const emit = defineEmits(['headerClicked']);
-
-// 定義一個有效的 items 數組使用於動態渲染
-// 使用 ref() 來使 items 可反應，任何對 items 的更改都會反應在 DOM 上
+// Defining a reactive list of items for dynamic rendering
+// The ref() function is used to make the items reactive, so any change in items will reflect in the DOM
 const items = ref([]);
 
-// 從服務器獲取資料的函數
 const fetchData = async () => {
   try {
-    const response = await axios.get('http://122.254.17.181:6996/api/items/');
+    const response = await axios.get('http://122.254.17.181:6996/api/logs/');
     items.value = response.data;
   } catch (error) {
-    console.error('從服務器獲取資料時出錯:', error);
+    console.error('Error fetching data from the server:', error);
   }
 };
 
-// 更新渲染一個項目的函數
 const updateItem = (index, updatedItem) => {
   items.value[index].label = updatedItem.badgeText;
   items.value[index].title = updatedItem.cardTitle;
   items.value[index].content = updatedItem.cardContent;
-  syncData(); // 同步更新資料到服務器
+  syncData();
 };
 
-// 同步數據到服務器的函數
+
 const syncData = async () => {
   try {
-    console.log('使用 PUT 同步資料');
-    await axios.put('http://192.168.68.53:6996/api/items/', items.value);
+		console.log('put 了');
+    await axios.put('http://192.168.68.53:6996/api/logs/', items.value);
   } catch (error) {
-    console.error('同步數據到服務器時出錯:', error);
+    console.error('Error syncing data with the server:', error);
   }
 };
 
-// 使用 watch 監視 items 的變化以实時更新數據
+
+
 watch(items, (newdata) => {
-  console.log(newdata);
+	console.log(newdata)
   syncData();
 }, { deep: true });
-
-// 在組件加載時自動調用 fetchData 來獲取資料
+// Fetch data from the Django server on component mount
 onMounted(fetchData);
-
-// 監視 props 中 fetch 的變化以重新獲取資料
 watch(() => props.fetch, () => {
-  fetchData();
+  
+    fetchData();
 });
-
-// 刪除一個項目的函數
+// Function to delete an item from the list
 const deleteItem = (index) => {
   items.value.splice(index, 1);
 };
-
 // 向父組件傳遞信號的函數
 const emitSignalToParent = () => {
   emit('headerClicked');
@@ -101,7 +93,7 @@ const emitSignalToParent = () => {
 </script>
 
 <style scoped>
-/* 設置卡片，以避免重疊頂部 */
+/* Styling the card with additional top margin to avoid overlapping the top of the screen */
 .card {
   width: 16rem;
   margin: auto;
@@ -109,10 +101,9 @@ const emitSignalToParent = () => {
   padding: 0.5rem;
 }
 
-/* 調整卡片標題和列表項目的字體大小 */
+/* Reduce the font size of list items and card content */
 .card-header {
   font-size: 0.9rem;
-  cursor: pointer;
 }
 
 .list-group-item {
