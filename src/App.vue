@@ -1,17 +1,17 @@
 <template>
 
-	<div class="d-flex justify-content-center align-items-center" style="height: 60vh;">
-  <div>
 
 
 
-	<lists v-show='isnow' :fetch="changes" @headerClicked='headerclick'/>
-	<loglist v-show='islog' :fetch="changes" @headerClicked='headerclick'/>
-	<booklist v-show='isbook' :fetch="changes" @headerClicked='headerclick'/>
-  <flatb @sendInput="talkwhat"/>
-  </div>
-</div>
+	<transition name='slide' >
+	<lists v-if='isnow' :fetch="changes" @headerClicked='headerclick'/>
+	<loglist v-else-if='islog' :fetch="changes" @headerClicked='headerclick'/>
+	<booklist v-else-if='isbook' :fetch="changes" @headerClicked='headerclick'/>
+	</transition>
 
+
+
+	<flatb @sendInput="talkwhat"/>
 </template>
 
 <script setup>
@@ -83,5 +83,22 @@ watch(now_stat,(newdata) => {
 
 </script>
 
-<style>
+
+<style scoped>
+.slide-leave-active,
+.slide-enter-active {
+  transition: all .6s ease;
+  position : absolute; 
+	transform: translateX(20%);
+}
+
+.slide-enter-from {
+	transform: translateX(200%);
+}
+
+.slide-leave-to {
+	transform: translateX(-100%);
+}
+
+
 </style>

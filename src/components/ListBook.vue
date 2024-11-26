@@ -1,5 +1,5 @@
 <template>
-  <div class="card-container position-absolute top-0 start-50 translate-middle-x">
+  <div class="card-container">
     <!-- Card element that contains the card header and list items -->
     <div class="card shadow p-2 mb-4 bg-body rounded" style="width: 16rem; margin-top: 15px;">
       <!-- Card header section -->

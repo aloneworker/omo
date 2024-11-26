@@ -1,9 +1,8 @@
 <template>
   <!-- 卡片容器，使用 Bootstrap 設置位置為橫向居中 -->
-  <div class="card-container position-absolute top-0 start-50 translate-middle-x">
+  <div class="card-container">
     <!-- 卡片元素，包含卡片標題與列表項目 -->
     <div class="card shadow p-2 mb-4 bg-body rounded" style="width: 16rem; margin-top: 15px;">
-
       <!-- 卡片標題區域 -->
       <div class="card-header" style="font-size: 0.9rem;" @dblclick="emitSignalToParent">
         Featured
