@@ -56,19 +56,25 @@ const fetchData = async () => {
   }
 };
 
-// 更新渲染一個項目的函數
-const updateItem = (index, updatedItem) => {
-  items.value[index].label = updatedItem.badgeText;
-  items.value[index].title = updatedItem.cardTitle;
-  items.value[index].content = updatedItem.cardContent;
-  syncData(); // 同步更新資料到服務器
+const updateItem = async (index, updatedItem) => {
+  try {
+    // 更新本地的 items
+    items.value[index].label = updatedItem.badgeText;
+    items.value[index].title = updatedItem.cardTitle;
+    items.value[index].content = updatedItem.cardContent;
+    
+    // 向服務器同步更新的項目
+    console.log('使用 PUT 同步更新資料');
+    await axios.put(`http://122.254.17.181:6996/api/items/${index}/`, updatedItem);
+  } catch (error) {
+    console.error('同步更新項目到服務器時出錯:', error);
+  }
 };
-
 // 同步數據到服務器的函數
 const syncData = async () => {
   try {
     console.log('使用 PUT 同步資料');
-    await axios.put('http://192.168.68.53:6996/api/items/', items.value);
+    await axios.put('http://122.254.17.181:6996/api/items/', items.value);
   } catch (error) {
     console.error('同步數據到服務器時出錯:', error);
   }
