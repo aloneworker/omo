@@ -2,10 +2,10 @@
   <!-- 卡片容器，使用 Bootstrap 設置位置為橫向居中 -->
   <div class="card-container">
     <!-- 卡片元素，包含卡片標題與列表項目 -->
-    <div class="card shadow p-2 mb-4 bg-body rounded" style="width: 16rem; margin-top: 15px;">
-      <!-- 卡片標題區域 -->
-      <div class="card-header" style="font-size: 0.9rem;" @dblclick="emitSignalToParent">
-        Featured
+    <div class="card shadow p-2 mb-4 bg-body rounded" style="width: 16rem; margin-top: 15px;" @dblclick="emitSignalToParent">
+      <!-- 卡片標題區域，顯示當天日期，字體粗體白字，背景黃色，設定為不可懸取 -->
+      <div class="card-header" style="font-size: 0.9rem; font-weight: bold; color: red; background-color: yellow;text-align: center; user-select: none;">
+        {{ new Date().toLocaleDateString() }}
       </div>
       <!-- 卡片內的列表組，用來顯示各個項目 -->
       <ul class="list-group list-group-flush">
@@ -116,10 +116,13 @@ const emitSignalToParent = () => {
   padding: 0.5rem;
 }
 
-/* 調整卡片標題和列表項目的字體大小 */
+/* 調整卡片標題的字體大小與樣式，並設置為粗體白字，背景黃色，不可懸取 */
 .card-header {
   font-size: 0.9rem;
-  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  user-select: none;
 }
 
 .list-group-item {

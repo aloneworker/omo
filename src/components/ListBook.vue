@@ -3,10 +3,9 @@
     <!-- Card element that contains the card header and list items -->
     <div class="card shadow p-2 mb-4 bg-body rounded" style="width: 16rem; margin-top: 15px;">
       <!-- Card header section -->
-      <div class="card-header" style="font-size: 0.9rem;" @dblclick="emitSignalToParent">
+      <div class="card-header" style="font-size: 1.2rem; font-weight: bold; color: white; background-color: green; text-align: center; user-select: none;" @dblclick="emitSignalToParent">
         書
-      </div>
-      <!-- List group inside the card for displaying list items -->
+      </div>     <!-- List group inside the card for displaying list items -->
       <ul class="list-group list-group-flush">
         <!-- Loop through items array to render each ListItem component -->
         <li v-for="(item, index) in items" :key="item.title" class="list-group-item" style="font-size: 0.85rem;">
@@ -111,7 +110,7 @@ watch(() => props.fetch, () => {
 const deleteItem = (index) => {
  
 	deleteItemServer(index);
-	 items.value.splice(index, 1);
+	items.value.splice(index, 1);
 };
 // 向父組件傳遞信號的函數
 const emitSignalToParent = () => {
