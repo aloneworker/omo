@@ -48,7 +48,7 @@ const headerclick = () => {
 
 const sendString = async () => {
   try {
-    const response = await axios.post('http://192.168.68.53:6996/api/talk/', {
+    const response = await axios.post('http://122.254.17.181:6996/api/talk/', {
       string: newdata.value
     })
     console.log('Response:', response.data)

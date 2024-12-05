@@ -53,13 +53,38 @@ const fetchData = async () => {
   }
 };
 
-const updateItem = (index, updatedItem) => {
-  items.value[index].label = updatedItem.badgeText;
-  items.value[index].title = updatedItem.cardTitle;
-  items.value[index].content = updatedItem.cardContent;
-  syncData();
+
+const deleteItemServer = async(index) => {
+  try {
+    // 更新本地的 items
+    // 向服務器同步更新的項目
+    await axios.delete(`http://122.254.17.181:6996/api/carditem/${items.value[index].id}/`);
+  } catch (error) {
+    console.error('同步更新項目到服務器時出錯:', error);
+  }
+	fetchData();
+
+
+
 };
 
+
+
+const updateItem = async (index, updatedItem) => {
+  try {
+    // 更新本地的 items
+    items.value[index].label = updatedItem.badgeText;
+    items.value[index].title = updatedItem.cardTitle;
+    items.value[index].content = updatedItem.cardContent;
+		const itemId = items.value[index].id;    
+    // 向服務器同步更新的項目
+    console.log('使用 PUT 同步更新資料');
+    await axios.put(`http://122.254.17.181:6996/api/carditem/${itemId}/`, items.value[index]);
+  } catch (error) {
+    console.error('同步更新項目到服務器時出錯:', error);
+  }
+	fetchData();
+};
 
 const syncData = async () => {
   try {
@@ -84,7 +109,9 @@ watch(() => props.fetch, () => {
 });
 // Function to delete an item from the list
 const deleteItem = (index) => {
-  items.value.splice(index, 1);
+ 
+	deleteItemServer(index);
+	 items.value.splice(index, 1);
 };
 // 向父組件傳遞信號的函數
 const emitSignalToParent = () => {
