@@ -1,12 +1,12 @@
 <template>
-  <div class="floating-button" @click="handleClick">
+  <div v-if="showButton" class="floating-button" @click="handleClick">
     <!-- 使用圖片作為按鈕圖樣 -->
     <img src="m.jpg" alt="按鈕圖樣" class="button-icon" />
   </div>
 
   <div v-if="showCard" class="position-fixed responsive-input-group">
     <div class="input-group mb-3">
-      <input v-model="inputValue" type="text" class="form-control border-0" placeholder="輸入您的查詢..." aria-label="搜尋輸入方塊" />
+      <input v-model="inputValue" type="text" class="form-control border-0" placeholder="..." aria-label="搜尋輸入方塊" />
       <button class="btn btn-primary" type="button" @click="handleSayClick">說</button>
     </div>
   </div>
@@ -14,7 +14,7 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue';
-
+const showButton = ref(true);
 // 控制卡片顯示的狀態
 const showCard = ref(false);
 // 儲存輸入的值
@@ -26,12 +26,18 @@ const emit = defineEmits(['sendInput']);
 // 設置按鈕點擊的事件處理邏輯
 const handleClick = () => {
   showCard.value = true;
+	showButton.value = false;
 }
 
 // 設置「說」按鈕的點擊事件處理邏輯
 const handleSayClick = () => {
   showCard.value = false;
-  emit('sendInput', inputValue.value); // 將輸入的資料傳遞給父組件
+	showButton.value = true;
+	if(inputValue.value != ''){
+		emit('sendInput', inputValue.value); // 將輸入的資料傳遞給父組件
+		inputValue.value = '';
+
+	}
 }
 </script>
 

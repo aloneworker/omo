@@ -2,9 +2,9 @@
   <!-- 卡片容器，使用 Bootstrap 設置位置為橫向居中 -->
   <div class="card-container">
     <!-- 卡片元素，包含卡片標題與列表項目 -->
-    <div class="card shadow p-2 mb-4 bg-body rounded" style="width: 16rem; margin-top: 15px;" @dblclick="emitSignalToParent">
+    <div class="card shadow p-2 mb-4 bg-body rounded" style="width: 16rem; margin-top: 15px;" >
       <!-- 卡片標題區域，顯示當天日期，字體粗體白字，背景黃色，設定為不可懸取 -->
-      <div class="card-header" style="font-size: 0.9rem; font-weight: bold; color: red; background-color: yellow;text-align: center; user-select: none;">
+      <div class="card-header" style="font-size: 0.9rem; font-weight: bold; color: red; background-color: yellow;text-align: center; user-select: none;" @dblclick="emitSignalToParent">
         {{ new Date().toLocaleDateString() }}
       </div>
       <!-- 卡片內的列表組，用來顯示各個項目 -->

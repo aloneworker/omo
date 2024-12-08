@@ -7,11 +7,11 @@
   </div>
 
   <!-- note-card：長按後彈出的對話方塊 -->
-  <div v-if="showCard" class="card mt-3" style="max-width: 90%; margin: 0 auto;" @click.self="closeOpenCards">
+  <div v-if="showCard" class="card mt-3" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; margin: 0; padding: 0; z-index: 1000; background: white;" @click.self="closeOpenCards">
     <div class="card-body">
-      <h5 class="card-title fs-5">記事</h5>
-      <input type="text" v-model="cardTitle" class="form-control form-control-md mb-2" placeholder="標籤">
-      <textarea v-model="cardContent" class="form-control form-control-md mb-2" placeholder="內容"></textarea>
+      <h5 style="border: none;" class="card-title fs-5">記事</h5>
+      <input type="text" v-model="cardTitle"  style="border: none;"   class="form-control form-control-md mb-2" placeholder="標籤">
+      <textarea v-model="cardContent"  style="border: none; flex: 1; resize: none;"   class="form-control form-control-md mb-2" placeholder="內容"></textarea>
       <button class="btn btn-primary btn-md" @click="confirmCard">確認</button>
     </div>
   </div>
@@ -154,7 +154,7 @@ const deleteBadge = () => {
   emit('delete-item'); // 向父組件發送刪除請求
 };
 
-watch([badgeText, cardTitle, cardContent], () => {
+watch([badgeText,  cardContent], () => {
   emit('update-item', { badgeText: badgeText.value, cardTitle: cardTitle.value, cardContent: cardContent.value });
 });
 
