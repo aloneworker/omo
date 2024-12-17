@@ -1,7 +1,7 @@
 <template>
   <div v-if="showButton" class="floating-button" @click="handleClick">
     <!-- 使用圖片作為按鈕圖樣 -->
-    <img src="m.jpg" alt="按鈕圖樣" class="button-icon" />
+    <img src="m.png" alt="按鈕圖樣" class="button-icon" />
   </div>
 
   <div v-if="showCard" class="position-fixed responsive-input-group">
