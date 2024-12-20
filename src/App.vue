@@ -1,17 +1,15 @@
 <template>
 
-
-
-
-	<transition name='slide' >
+	<login v-if="!isLogin" @loginStatus="handleLoginStatus"/>
+	<div v-if="isLogin">
+	<transition name='slide' v-if="isLogin">
 	<lists v-if='isnow' :fetch="changes" @headerClicked='headerclick'/>
 	<loglist v-else-if='islog' :fetch="changes" @headerClicked='headerclick'/>
 	<booklist v-else-if='isbook' :fetch="changes" @headerClicked='headerclick'/>
 	</transition>
-
-
-
+  <girl :show='showgirl'/>
 	<flatb @sendInput="talkwhat"/>
+	</div>
 </template>
 
 <script setup>
@@ -20,6 +18,8 @@ import lists from './components/ListS.vue'
 import loglist from './components/ListLog.vue'
 import booklist from './components/ListBook.vue'
 import flatb from './components/FlatBott.vue'
+import login from './components/LogIn.vue'
+import girl from './components/GirLs.vue'
 import axios from 'axios'
 const newdata = ref('');
 const now_stat = ref('now');
@@ -27,7 +27,12 @@ const changes = ref('');
 const isnow = ref(true);
 const islog = ref(false);
 const isbook = ref(false);
+const isLogin = ref(false);
+const loginResult = ref(null);
+const showgirl = ref(true);
+
 const talkwhat = (data) =>{
+	showgirl.value = !showgirl.value
   newdata.value = data ;
 	console.log('talk',data);
 	sendString();
@@ -57,7 +62,12 @@ const sendString = async () => {
     console.error('Error sending string:', error)
   }
 }
-
+// 接收子組件傳遞的登入狀態
+const handleLoginStatus = (status) => {
+  loginResult.value = status;
+	isLogin.value = status;
+  console.log('接收到的登入狀態:', status);
+};
 
 watch(now_stat,(newdata) => {
 	if (newdata === 'now'){
