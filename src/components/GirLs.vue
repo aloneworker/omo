@@ -1,60 +1,20 @@
 <template>
-  <div class="random-image-container">
-    <transition name="fade">
-      <img 
-        v-if="shouldShowImage" 
-        src="girls/a1/stand/nomal/01.png"
-        alt="Anime Character"
-        class="random-image"
-      />
-    </transition>
-  </div>
+  <div>
+    <img src="/girls/a1/stand/normal/a1.png" alt="自適應圖片" class="responsive-image" />
+  
+	
+	</div>
 </template>
 
-<script setup>
-import { ref, watch ,defineProps} from 'vue'
+<style>
+.responsive-image {
+  width: 100%; /* 寬度佔滿容器 */
+  display: block; /* 移除底部多餘的間距 */
+  overflow-y: auto; /* 垂直方向啟用捲動 */
 
-const props = defineProps({
-  show: {
-    type: Boolean,
-    required: true
-  }
-})
-
-const shouldShowImage = ref(false)
-
-watch(
-  () => props.show,
-  (newValue) => {
-    if (newValue) {
-      shouldShowImage.value = Math.random() < 0.5
-    } else {
-      shouldShowImage.value = false
-    }
-  },
-  { immediate: true }
-)
-</script>
-
-<style scoped>
-.random-image-container {
-  width: 300px;
-  height: 400px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.random-image {
-  max-width: 100%;
-  height: auto;
-}
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s;
-}
 
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-}
 </style>
+

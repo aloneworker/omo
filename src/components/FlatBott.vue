@@ -62,7 +62,7 @@ const handleSayClick = () => {
 }
 
 .responsive-input-group {
-  bottom: 80px;
+  bottom: 10px;
   right: 20px;
   width: 90%; /* 使其在移動設備上更合適 */
   max-width: 480px; /* 設置最大寬度以適應較大屏幕 */
@@ -84,7 +84,7 @@ const handleSayClick = () => {
   }
 
   .responsive-input-group {
-    bottom: 60px;
+    bottom: 10px;
     right: 10px;
     width: 95%;
     padding: 5px;
