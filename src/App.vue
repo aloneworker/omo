@@ -7,8 +7,10 @@
 	<loglist v-else-if='islog' :fetch="changes" @headerClicked='headerclick'/>
 	<booklist v-else-if='isbook' :fetch="changes" @headerClicked='headerclick'/>
 	</transition>
-  <girl :show='showgirl' class="floating-element"/>
+	<!--
+  <girl :show='showgirl' class="floating-element" @swipe-right='girl_right' @swipe-left='girl_left'/>
 	<talk :message='talking'/>
+	!-->
 	<flatb @sendInput="talkwhat"/>
 	</div>
 </template>
@@ -20,8 +22,9 @@ import loglist from './components/ListLog.vue'
 import booklist from './components/ListBook.vue'
 import flatb from './components/FlatBott.vue'
 import login from './components/LogIn.vue'
-import girl from './components/GirLs.vue'
-import talk from './components/TalkBox.vue'
+
+//import girl from './components/GirLs.vue'
+//import talk from './components/TalkBox.vue'
 import axios from 'axios'
 const newdata = ref('');
 const now_stat = ref('now');
@@ -31,16 +34,23 @@ const islog = ref(false);
 const isbook = ref(false);
 const isLogin = ref(true);
 const loginResult = ref(null);
-const showgirl = ref(true);
-const talking = ref('');
-const talkwhat = (data) =>{
-	showgirl.value = !showgirl.value
-  newdata.value = data ;
-	console.log('talk',data);
-	sendString();
+//const showgirl = ref(true);
+//const talking = ref('');
+//const talkwhat = (data) =>{
+//	showgirl.value = !showgirl.value
+//  newdata.value = data ;
+//	console.log('talk',data);
+//	sendString();
 
-}
+//}
 
+//const girl_left = () => {
+//	alert('girl lift');
+//}
+
+//const girl_right = () => {
+//	alert('girl right');
+//}
 
 const headerclick = () => {
 	if (now_stat.value === 'now') {
@@ -53,17 +63,17 @@ const headerclick = () => {
 
 }
 
-const sendString = async () => {
-  try {
-    const response = await axios.post('http://122.254.17.181:6996/api/talk/', {
-      string: newdata.value
-    })
-    console.log('Response:', response.data)
-		changes.value = newdata.value ;
-  } catch (error) {
-    console.error('Error sending string:', error)
-  }
-}
+//const sendString = async () => {
+//  try {
+//    const response = await axios.post('http://122.254.17.181:6996/api/talk/', {
+//      string: newdata.value
+//    })
+//    console.log('Response:', response.data)
+//		changes.value = newdata.value ;
+//  } catch (error) {
+//    console.error('Error sending string:', error)
+//  }
+//}
 // 接收子組件傳遞的登入狀態
 const handleLoginStatus = (status) => {
   loginResult.value = status;
