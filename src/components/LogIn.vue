@@ -11,7 +11,7 @@
           <div class="card shadow-sm">
             <div class="card-body">
               <!-- 標題 -->
-              <h4 class="card-title text-center mb-4">慰問具 登入</h4>
+              <h4 class="card-title text-center mb-4">LogIn</h4>
               <!-- 密碼欄位 -->
               <div class="mb-3">
                 <input type="password" v-model="password" class="form-control" id="password" placeholder="請輸入密碼">

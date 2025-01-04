@@ -18,6 +18,7 @@
             :initial-content="item.content" 
             @delete-item="deleteItem(index)"
             @update-item="updateItem(index, $event)"
+						@creat-item="creatItem($event)"
           />
         </li>
       </ul>
@@ -50,19 +51,32 @@ const items = ref([]);
 const fetchData = async () => {
   try {
     const response = await axios.get('http://122.254.17.181:6996/api/items/');
+		console.log(response);
     items.value = response.data;
   } catch (error) {
     console.error('從服務器獲取資料時出錯:', error);
   }
 };
 
+const creatItem = async (item) => {
+	try {
+		// 新增一個  誌 使用 #
+		const log = '#'+item.log
+		await axios.post('http://122.254.17.181:6996/api/talk/', {string: log})
+	} catch (error) {
+    console.error('同步更新項目到服務器時出錯:', error);
+  }
+};
+
+
 
 const updateItem = async (index, updatedItem) => {
-  try {
+	try {
     // 更新本地的 items
     items.value[index].label = updatedItem.badgeText;
     items.value[index].title = updatedItem.cardTitle;
     items.value[index].content = updatedItem.cardContent;
+		items.value[index].date_created = updatedItem.timestamp;
 		const itemId = items.value[index].id;    
     // 向服務器同步更新的項目
     console.log('使用 PUT 同步更新資料');

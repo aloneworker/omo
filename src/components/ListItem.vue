@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex align-items-center" @click.self="closeOpenCards">
     <!-- 標籤：包含標籤和標籤背景顏色 -->
-    <span :class="badgeClass" style="user-select: none; cursor: pointer;" @dblclick="handleDoubleClick" @mousedown="startPress" @mouseup="endPress" @touchstart="startPress" @touchend="endPress">{{ badgeText }}</span>
+    <span :class="badgeClass" :style="badgeStyle" style="user-select: none; cursor: pointer;" @dblclick="handleDoubleClick" @mousedown="startPress" @mouseup="endPress" @touchstart="startPress" @touchend="endPress">{{ badgeText }}</span>
     <!-- 標籤內容：表示我們想要紀錄的內容 -->
     <p class="mb-0 fs-5">{{ cardTitle }}</p>
   </div>
@@ -55,7 +55,7 @@ const props = defineProps({
 });
 
 // 發出事件到父組件
-const emit = defineEmits(['delete-item', 'update-item']);
+const emit = defineEmits(['delete-item', 'update-item','creat-item']);
 
 // 標籤的文字
 const badgeText = ref(props.initialBadgeText || '@');
@@ -82,10 +82,49 @@ const badgeClass = computed(() => {
     return 'badge bg-secondary me-2 fs-5';
   } else if (badgeText.value === '書') {
     return 'badge bg-success me-2 fs-5';
-  } else {
-    return 'badge bg-primary me-2 fs-5';
+	} else if (badgeText.value ==- '>>'){
+		return 'badge me-2 fs-5';
+	} else {
+		return 'badge bg-primary me-2 fs-5';
   }
 });
+
+// 增加標籤數值
+const incrementBadgeValue = () => {
+	const currentValue = parseInt(cardContent.value, 10) || 0;
+	cardContent.value = (currentValue + 1).toString();
+	const logs = cardTitle.value + " " + cardContent.value + "次"
+	emit('update-item', { badgeText: badgeText.value, cardTitle: cardTitle.value, cardContent: cardContent.value ,timestamp: getCurrentISODate()});
+	emit('creat-item',{log:logs} )
+};
+
+
+
+// 計算屬性：動態背景樣式
+const badgeStyle = computed(() => {
+  if (badgeText.value === '>>') {
+    const baseColor = 255; // 白色基數
+    const maxBlueIntensity = 200; // 最大藍色強度
+    const numberValue = Math.min(parseInt(cardContent.value, 10) || 0, 99); // 提取數值並限制在範圍 0-99
+    const blueValue = baseColor - Math.floor((numberValue / 99) * maxBlueIntensity);
+    return {
+      background: `linear-gradient(to right, rgba(${baseColor}, ${baseColor}, ${blueValue}, 1), rgba(${blueValue}, ${baseColor}, ${baseColor}, 1))`,
+    };
+  }
+  return {};
+});
+
+
+const getCurrentISODate = () => {
+  const now = new Date();
+  // 格式化為 ISO 8601 並附加時區偏移
+  const isoString = now.toISOString(); // 2023-12-04T15:30:00.123Z
+  const timezoneOffset = -now.getTimezoneOffset(); // 獲取分鐘數
+  const offsetSign = timezoneOffset >= 0 ? '+' : '-';
+  const offsetHours = String(Math.floor(Math.abs(timezoneOffset) / 60)).padStart(2, '0');
+  const offsetMinutes = String(Math.abs(timezoneOffset) % 60).padStart(2, '0');
+  return `${isoString.slice(0, -1)}${offsetSign}${offsetHours}:${offsetMinutes}`;
+};
 
 const changeBadge = () => {
   console.log('changeBadge called');
@@ -117,7 +156,7 @@ const confirmCard = () => {
   savedContent.value = cardContent.value;
   showCard.value = false; // Hide note-card after confirming
   badgeText.value = '書'; // Update the badge to "書" after confirming
-  emit('update-item', { badgeText: badgeText.value, cardTitle: cardTitle.value, cardContent: cardContent.value }); // Emit updated data to the parent component
+  emit('update-item', { badgeText: badgeText.value, cardTitle: cardTitle.value, cardContent: cardContent.value,timestamp: getCurrentISODate()}); // Emit updated data to the parent component
 };
 
 const closeNote = () => {
@@ -144,7 +183,9 @@ const handleDoubleClick = () => {
   } else if (badgeText.value === '誌') {
     console.log('Confirming delete');
     showDeleteConfirm.value = true;
-  }
+  }else if (badgeText.value === '>>') {
+		incrementBadgeValue();
+	}
 };
 
 const deleteBadge = () => {

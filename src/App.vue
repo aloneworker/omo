@@ -7,7 +7,6 @@
 	<loglist v-else-if='islog' :fetch="changes" @headerClicked='headerclick'/>
 	<booklist v-else-if='isbook' :fetch="changes" @headerClicked='headerclick'/>
 	</transition>
-  <girl :show='showgirl'/>
 	<flatb @sendInput="talkwhat"/>
 	</div>
 </template>
@@ -19,7 +18,6 @@ import loglist from './components/ListLog.vue'
 import booklist from './components/ListBook.vue'
 import flatb from './components/FlatBott.vue'
 import login from './components/LogIn.vue'
-import girl from './components/GirLs.vue'
 import axios from 'axios'
 const newdata = ref('');
 const now_stat = ref('now');
@@ -29,10 +27,8 @@ const islog = ref(false);
 const isbook = ref(false);
 const isLogin = ref(false);
 const loginResult = ref(null);
-const showgirl = ref(true);
 
 const talkwhat = (data) =>{
-	showgirl.value = !showgirl.value
   newdata.value = data ;
 	console.log('talk',data);
 	sendString();
@@ -53,9 +49,7 @@ const headerclick = () => {
 
 const sendString = async () => {
   try {
-    const response = await axios.post('http://122.254.17.181:6996/api/talk/', {
-      string: newdata.value
-    })
+    const response = await axios.post('http://122.254.17.181:6996/api/talk/', {string: newdata.value})
     console.log('Response:', response.data)
 		changes.value = newdata.value ;
   } catch (error) {
