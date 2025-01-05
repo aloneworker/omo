@@ -1,5 +1,10 @@
 <template>
-  <!-- 卡片容器，使用 Bootstrap 設置位置為橫向居中 -->
+<div class="background-container">
+	<div class="background-image" :style="{ backgroundImage: `url(${currentImage})` }">
+	</div>
+</div>
+		
+	<!-- 卡片容器，使用 Bootstrap 設置位置為橫向居中 -->
   <div class="card-container">
     <!-- 卡片元素，包含卡片標題與列表項目 -->
     <div class="card shadow p-2 mb-4 bg-body rounded" style="width: 16rem; margin-top: 15px;" >
@@ -23,14 +28,67 @@
         </li>
       </ul>
     </div>
-  </div>
+</div>
 </template>
 
 <script setup>
 // 引入 ListItem 組件使用於渲染每個列表項目
 import ListItem from "./ListItem.vue";
-import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
+import { ref, onMounted,computed, watch, defineProps, defineEmits } from 'vue';
 import axios from 'axios';
+
+
+
+
+// 定義圖片列表和目前的索引
+const images = [
+  '/bgs/1.jpg',
+  '/bgs/2.jpg',
+  '/bgs/3.jpg',
+	'/bgs/4.jpg',
+	'/bgs/5.jpg',
+	'/bgs/6.jpg',
+	'/bgs/7.jpg',
+	'/bgs/8.jpg',
+	'/bgs/9.jpg',
+	'/bgs/10.jpg',
+	'/bgs/11.jpg',
+	'/bgs/12.jpg',
+	'/bgs/13.jpg',
+	'/bgs/14.jpg',
+	'/bgs/15.jpg',
+	'/bgs/16.jpg',
+	'/bgs/17.jpg',
+	'/bgs/18.jpg',
+	'/bgs/19.jpg',
+	'/bgs/20.jpg',
+	'/bgs/21.jpg',
+	'/bgs/22.jpg',
+	'/bgs/23.jpg',
+];
+const currentIndex = ref(Math.floor(Math.random() * images.length));
+
+// 計算目前顯示的圖片
+const currentImage = computed(() => images[currentIndex.value]);
+
+const startSlideshow = () => {
+  setInterval(() => {
+let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * images.length);
+    } while (randomIndex === currentIndex.value); // 確保不與當前圖片相同
+    currentIndex.value = randomIndex;
+  }, 20000); // 每 20 秒切換一次
+};
+
+// 在元件掛載時啟動，卸載時清除計時器
+onMounted(() => {
+  startSlideshow();
+	fetchData();
+});
+
+
+
 
 // 定義 props，取得引數 fetch
 const props = defineProps({
@@ -102,8 +160,6 @@ watch(items, (newdata) => {
   syncData();
 }, { deep: true });
 
-// 在組件加載時自動調用 fetchData 來獲取資料
-onMounted(fetchData);
 
 // 監視 props 中 fetch 的變化以重新獲取資料
 watch(() => props.fetch, () => {
@@ -128,6 +184,7 @@ const emitSignalToParent = () => {
   margin: auto;
   margin-top: 15px;
   padding: 0.5rem;
+	opacity: 0.8; /* 設定透明度為 50% */
 }
 
 /* 調整卡片標題的字體大小與樣式，並設置為粗體白字，背景黃色，不可懸取 */
@@ -141,6 +198,26 @@ const emitSignalToParent = () => {
 
 .list-group-item {
   font-size: 0.85rem;
+}
+
+.background-container {
+  position: fixed;
+  width: 100%;
+  height: 100vh; /* 全螢幕高度 */
+	object-fit: cover;
+  z-index: -1;
+}
+
+.background-image {
+	position: fixed;
+	width: 110%;
+  height: 110%;
+	top : -10px;
+	background-size: cover;
+  background-position: center;
+  transition: background-image 0.5s ease; /* 平滑切換效果 */
+	object-fit: cover;
+  z-index: -1;
 }
 </style>
 

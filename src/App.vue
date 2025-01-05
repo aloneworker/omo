@@ -1,7 +1,6 @@
 <template>
-
 	<login v-if="!isLogin" @loginStatus="handleLoginStatus"/>
-	<div v-if="isLogin">
+	<div v-if="isLogin" >
 	<transition name='slide' v-if="isLogin">
 	<lists v-if='isnow' :fetch="changes" @headerClicked='headerclick'/>
 	<loglist v-else-if='islog' :fetch="changes" @headerClicked='headerclick'/>
@@ -27,6 +26,10 @@ const islog = ref(false);
 const isbook = ref(false);
 const isLogin = ref(false);
 const loginResult = ref(null);
+
+
+
+
 
 const talkwhat = (data) =>{
   newdata.value = data ;
@@ -103,6 +106,5 @@ watch(now_stat,(newdata) => {
 .slide-leave-to {
 	transform: translateX(-100%);
 }
-
 
 </style>
