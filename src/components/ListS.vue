@@ -3,7 +3,7 @@
 	<div class="background-image" :style="{ backgroundImage: `url(${currentImage})` }">
 	</div>
 </div>
-		
+	<Banner ref="messageBanner" title="操作成功"/>		
 	<!-- 卡片容器，使用 Bootstrap 設置位置為橫向居中 -->
   <div class="card-container">
     <!-- 卡片元素，包含卡片標題與列表項目 -->
@@ -36,10 +36,10 @@
 import ListItem from "./ListItem.vue";
 import { ref, onMounted,computed, watch, defineProps, defineEmits } from 'vue';
 import axios from 'axios';
+import Banner from './BannEr.vue';
 
 
-
-
+const messageBanner = ref(null);
 // 定義圖片列表和目前的索引
 const images = [
   '/bgs/1.jpg',
@@ -70,6 +70,14 @@ const currentIndex = ref(Math.floor(Math.random() * images.length));
 
 // 計算目前顯示的圖片
 const currentImage = computed(() => images[currentIndex.value]);
+
+
+
+
+
+
+
+
 
 const startSlideshow = () => {
   setInterval(() => {
@@ -126,17 +134,15 @@ const creatItem = async (item) => {
   }
 };
 
-
-
 const updateItem = async (index, updatedItem) => {
 	try {
+		messageBanner.value.showBanner();
     // 更新本地的 items
     items.value[index].label = updatedItem.badgeText;
     items.value[index].title = updatedItem.cardTitle;
     items.value[index].content = updatedItem.cardContent;
-		items.value[index].date_created = updatedItem.timestamp;
 		const itemId = items.value[index].id;    
-    // 向服務器同步更新的項目
+		// 向服務器同步更新的項目
     console.log('使用 PUT 同步更新資料');
     await axios.put(`http://122.254.17.181:6996/api/carditem/${itemId}/`, items.value[index]);
   } catch (error) {

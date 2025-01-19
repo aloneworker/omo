@@ -6,6 +6,9 @@
 	<loglist v-else-if='islog' :fetch="changes" @headerClicked='headerclick'/>
 	<booklist v-else-if='isbook' :fetch="changes" @headerClicked='headerclick'/>
 	</transition>
+
+	<keepcomponent/>
+
 	<flatb @sendInput="talkwhat"/>
 	</div>
 </template>
@@ -17,6 +20,7 @@ import loglist from './components/ListLog.vue'
 import booklist from './components/ListBook.vue'
 import flatb from './components/FlatBott.vue'
 import login from './components/LogIn.vue'
+import keepcomponent from './components/KeepS.vue'
 import axios from 'axios'
 const newdata = ref('');
 const now_stat = ref('now');

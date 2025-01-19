@@ -7,7 +7,7 @@
   </div>
 
   <!-- note-card：長按後彈出的對話方塊 -->
-  <div v-if="showCard" class="card mt-3" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; margin: 0; padding: 0; z-index: 1000; background: white;" @click.self="closeOpenCards">
+  <div v-if=false class="card mt-3" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; margin: 0; padding: 0; z-index: 1000; background: white;" @click.self="closeOpenCards">
     <div class="card-body">
       <h5 style="border: none;" class="card-title fs-5">記事</h5>
       <input type="text" v-model="cardTitle"  style="border: none;"   class="form-control form-control-md mb-2" placeholder="標籤">
@@ -117,13 +117,19 @@ const badgeStyle = computed(() => {
 
 const getCurrentISODate = () => {
   const now = new Date();
-  // 格式化為 ISO 8601 並附加時區偏移
-  const isoString = now.toISOString(); // 2023-12-04T15:30:00.123Z
-  const timezoneOffset = -now.getTimezoneOffset(); // 獲取分鐘數
-  const offsetSign = timezoneOffset >= 0 ? '+' : '-';
-  const offsetHours = String(Math.floor(Math.abs(timezoneOffset) / 60)).padStart(2, '0');
-  const offsetMinutes = String(Math.abs(timezoneOffset) % 60).padStart(2, '0');
-  return `${isoString.slice(0, -1)}${offsetSign}${offsetHours}:${offsetMinutes}`;
+  const formattedDate = 
+    now.getFullYear() +
+    "-" +
+    ("0" + (now.getMonth() + 1)).slice(-2) +
+    "-" +
+    ("0" + now.getDate()).slice(-2) +
+    " " +
+    ("0" + now.getHours()).slice(-2) +
+    ":" +
+    ("0" + now.getMinutes()).slice(-2) +
+    ":" +
+    ("0" + now.getSeconds()).slice(-2);
+  return formattedDate;
 };
 
 const changeBadge = () => {
@@ -196,7 +202,7 @@ const deleteBadge = () => {
 };
 
 watch([badgeText,  cardContent], () => {
-  emit('update-item', { badgeText: badgeText.value, cardTitle: cardTitle.value, cardContent: cardContent.value });
+  emit('update-item', { badgeText: badgeText.value, cardTitle: cardTitle.value, cardContent: cardContent.value,timestamp: getCurrentISODate() });
 });
 
 onBeforeUnmount(() => {
