@@ -66,8 +66,10 @@ defineExpose({ showBanner });
 
 span {
   display: block; /* 將 span 設定為區塊元素 */
-  text-align: right; /* 文字靠右對齊 */
+  text-indent: 50px; /* 讓文字向右移動 10px */
   padding-right: 30px; /* 右側內邊距 20px */
+
+
 }
 
 

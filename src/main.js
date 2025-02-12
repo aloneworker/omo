@@ -1,4 +1,7 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router'; // 導入 router
 import 'bootstrap/dist/css/bootstrap.css'
-createApp(App).mount('#app')
+const app = createApp(App);
+app.use(router); // 使用 Vue Router
+app.mount('#app');
