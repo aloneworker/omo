@@ -1,4 +1,7 @@
 <template>
+
+  <girsys v-show="triggerFlag" @hide="triggerFlag=false" :shouldTriggerGirl="triggerFlag" class="A" />
+	
 	<login v-if="!isLogin" @loginStatus="handleLoginStatus"/>
 	<div v-if="isLogin" >
 	<transition name='slide' v-if="isLogin">
@@ -6,14 +9,16 @@
 	<loglist v-else-if='islog' :fetch="changes" @headerClicked='headerclick'/>
 	<booklist v-else-if='isbook' :fetch="changes" @headerClicked='headerclick'/>
 	</transition>
-
-
+	
 	<flatb @sendInput="talkwhat"/>
 	</div>
 </template>
 
 <script setup>
-import { ref,watch } from 'vue'
+import { ref,watch,onMounted  } from 'vue'
+
+import girsys from './GirSyst.vue'
+
 import lists from './ListS.vue'
 import loglist from './ListLog.vue'
 import booklist from './ListBook.vue'
@@ -29,15 +34,20 @@ const isbook = ref(false);
 const isLogin = ref(false);
 const loginResult = ref(null);
 
-
-
+const triggerFlag = ref(false); //  控制子組件是否觸發 triggerGirl 的旗標
 
 
 const talkwhat = (data) =>{
   newdata.value = data ;
-	console.log('talk',data);
 	sendString();
+}
 
+
+const see = () =>{
+  if (!document.hidden) {
+     // 當網頁變成可見時發出訊號
+		triggerFlag.value = 'useing';
+  }
 }
 
 
@@ -53,10 +63,19 @@ const headerclick = () => {
 }
 
 const sendString = async () => {
+
   try {
-    const response = await axios.post('http://122.254.17.181:6996/api/talk/', {string: newdata.value})
-    console.log('Response:', response.data)
-		changes.value = newdata.value ;
+		if (newdata.value === '喝')
+		{
+			triggerFlag.value = '喝';
+		}else {
+			const response = await axios.post('http://122.254.17.181:6996/api/talk/', {string: newdata.value})
+			console.log('Response:', response.data)
+			changes.value = newdata.value ;
+
+			triggerFlag.value = 'add';
+
+		}
   } catch (error) {
     console.error('Error sending string:', error)
   }
@@ -66,6 +85,7 @@ const handleLoginStatus = (status) => {
   loginResult.value = status;
 	isLogin.value = status;
   console.log('接收到的登入狀態:', status);
+	triggerFlag.value = 'come';
 };
 
 watch(now_stat,(newdata) => {
@@ -90,6 +110,19 @@ watch(now_stat,(newdata) => {
 
 });
 
+
+
+
+onMounted(() => {
+  // 觸發後，如果需要限制只觸發一次，可以考慮在這裡將 triggerFlag 設回 false
+  // 但在這個例子中，讓旗標保持 true，讓子組件在整個生命週期都處於 "準備好被觸發" 的狀態，可能更符合需求
+	document.addEventListener('visibilitychange', see);
+
+
+});
+
+
+
 </script>
 
 
@@ -109,4 +142,15 @@ watch(now_stat,(newdata) => {
 	transform: translateX(-100%);
 }
 
+
+
+/* 針對自定義組件 A 的樣式 */
+.A {
+	position: fixed;
+	top: 0;
+	left: 0; /* 或根據需要調整 */
+	z-index:999;
+	width: 100%;
+	background-color: rgba(255, 255, 255, 0.5);
+}
 </style>
