@@ -1,9 +1,13 @@
 <template>
   <div class="girl-system">
-    <div class="image-container" v-if="girlImage">
-      <img :src="girlImage" alt="Girl Image" class="girl-image" />
-    </div>
-    <div
+
+<div class="image-container" v-if="girlImage && girlImage.length > 0">
+  <img v-for="(imageSrc, index) in girlImage" :key="index" :src="imageSrc" alt=""
+		:style="{ zIndex: index + 1 }"
+		class="girl-image" />
+</div>
+
+		<div
       class="dialog-box"
       v-if="girlImage"
       @touchstart="startSwipe"
@@ -71,6 +75,7 @@ const fetchGirlData = async (state) => {
     }
 
     girlImage.value = response.data.image;
+		console.log(girlImage.value)
   } catch (error) {
     console.error(`獲取妹子資料失敗 (狀態: ${state}):`, error);
   }
@@ -137,6 +142,7 @@ watch(
 }
 
 .image-container {
+	position: relative;
   width: 100%;
   height: 100%;
   display: flex;
@@ -145,6 +151,7 @@ watch(
 }
 
 .girl-image {
+	position: absolute;
   max-width: 110%;
   max-height: 110%;
   object-fit: contain;
